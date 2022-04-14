@@ -1,13 +1,10 @@
 package com.neoguri.pensionlottery.presentation.lotto
 
 import android.app.Application
-import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.neoguri.pensionlottery.R
 import com.neoguri.pensionlottery.constant.URLs
 import com.neoguri.pensionlottery.data.model.admincheck.AdminCheckEntity
 import com.neoguri.pensionlottery.data.model.admininsert.AdminLottoEntity
