@@ -210,15 +210,15 @@ class QRCodeFragment : BaseFragment(), View.OnClickListener, DefaultLifecycleObs
         barcodeView!!.barcodeView.decoderFactory = DefaultDecoderFactory(formats)
         barcodeView!!.initializeFromIntent(intent)
 
-        viewModel.mRJLottoNum.observe(viewLifecycleOwner, { lottoNums ->
+        viewModel.mRJLottoNum.observe(viewLifecycleOwner) { lottoNums ->
             // Update the cached copy of the words in the adapter.
             lottoNums?.let {
                 mLottoItemList = it
                 barcodeView!!.decodeContinuous(callback)
             }
-        })
+        }
 
-        viewModel.qrStartCheck.observe(viewLifecycleOwner, { qrStartCheck ->
+        viewModel.qrStartCheck.observe(viewLifecycleOwner) { qrStartCheck ->
             // Update the cached copy of the words in the adapter.
             qrStartCheck?.let {
                 if (qrStartCheck) {
@@ -228,7 +228,7 @@ class QRCodeFragment : BaseFragment(), View.OnClickListener, DefaultLifecycleObs
                     barcodeView!!.pause()
                 }
             }
-        })
+        }
 
     }
 

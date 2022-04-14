@@ -68,13 +68,11 @@ class SecretFragment : BaseFragment(), LifecycleObserver, View.OnClickListener {
             R.id.upload_button -> {
                 if (mBinding.modeType.text == "Insert") {
                     viewModel.insertAdminLotto(
-                        requireActivity(),
                         URLs.JSON_,
                         URLs.LOTTO_MAX_INSERT,
                         JsonTransmission().adminLotto(mLottoNums, "0"))
                 } else if (mBinding.modeType.text == "Update") {
                     viewModel.insertAdminLotto(
-                        requireActivity(),
                         URLs.JSON_,
                         URLs.LOTTO_MAX_UPDATE,
                         JsonTransmission().adminLotto(mLottoNums, "1"))
@@ -131,7 +129,7 @@ class SecretFragment : BaseFragment(), LifecycleObserver, View.OnClickListener {
     }
 
     private val viewModel: PensionLotteryViewModel by lazy {
-        ViewModelProvider(requireActivity(), object : ViewModelProvider.Factory {
+        ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T =
                 PensionLotteryViewModel(requireActivity().application) as T
         }).get(PensionLotteryViewModel::class.java)
@@ -141,21 +139,26 @@ class SecretFragment : BaseFragment(), LifecycleObserver, View.OnClickListener {
         initColorSetting()
         lottoCrolingStart()
 
-        viewModel.lottoItemAdminCheck.observe(viewLifecycleOwner, { lottoNums ->
+        viewModel.lottoItemAdminCheck.observe(viewLifecycleOwner) { lottoNums ->
             // Update the cached copy of the words in the adapter.
             lottoNums?.let {
-                if(null != it){
-                    if(it.result == "Y"){
+                if (null != it) {
+                    if (it.result == "Y") {
                         if (LottoUtil.isNumeric(mLottoNums.code)) {
-                            if (mLottoNums.code > it.data[0].code.toString()) {
+                            if (mLottoNums.code.toInt() > it.data[0].code) {
                                 mBinding.modeType.text = "Insert"
-                            } else if (mLottoNums.code == it.data[0].code.toString()) {
+                            } else if (mLottoNums.code.toInt() == it.data[0].code) {
                                 mBinding.modeType.text = "Update"
                                 if (it.data[0].pensionlotteryNum != "" && it.data[0].firstPlacePeople != "") {
                                     mBinding.modeType.text = "Success"
                                 }
                             }
                         }
+                        Toast.makeText(
+                            context,
+                            "해당 회차 입력 성공",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                     mBinding.uploadButton.setOnClickListener(this)
                 } else {
@@ -166,7 +169,7 @@ class SecretFragment : BaseFragment(), LifecycleObserver, View.OnClickListener {
                     ).show()
                 }
             }
-        })
+        }
 
     }
 

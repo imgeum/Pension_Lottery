@@ -5,16 +5,12 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.security.keystore.KeyGenParameterSpec
-import android.security.keystore.KeyProperties
 import android.text.Html
 import android.text.Spanned
-import android.util.Base64
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.neoguri.pensionlottery.R
 import com.neoguri.pensionlottery.base.BaseActivity
 import com.neoguri.pensionlottery.constant.URLs
@@ -22,14 +18,6 @@ import com.neoguri.pensionlottery.databinding.ActivityIntroBinding
 import com.neoguri.pensionlottery.presentation.db.allLottoNum.AllLottoNum
 import com.neoguri.pensionlottery.presentation.lotto.MainActivity
 import com.neoguri.pensionlottery.presentation.lotto.PensionLotteryViewModel
-import com.neoguri.pensionlottery.util.AES256Util
-import com.neoguri.pensionlottery.util.KeystoreAES
-import com.neoguri.pensionlottery.util.LogUtil
-import java.security.KeyStore
-import javax.crypto.Cipher
-import javax.crypto.KeyGenerator
-import javax.crypto.SecretKey
-import javax.crypto.spec.IvParameterSpec
 import kotlin.system.exitProcess
 
 class IntroActivity : BaseActivity() {
@@ -55,23 +43,31 @@ class IntroActivity : BaseActivity() {
             mBinding.appIconImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.intro))
         }
 
-        viewModel.lottoVersionJson.observe(this, { lottoVersion ->
+        viewModel.lottoVersionJson.observe(this) { lottoVersion ->
             // Update the cached copy of the words in the adapter.
             lottoVersion?.let {
-                mAppVersion = it
-                isAllFirstCheck = true
-                isAllCheck(isAllFirstCheck, isAllSecondCheck)
+                if(it != ""){
+                    mAppVersion = it
+                    isAllFirstCheck = true
+                    isAllCheck(isAllFirstCheck, isAllSecondCheck)
+                } else {
+                    Toast.makeText(
+                        this,
+                        resources.getString(R.string.network_check),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
-        })
+        }
 
-        viewModel.mLiveRoomLottoNum.observe(this, { lottoNums ->
+        viewModel.mLiveRoomLottoNum.observe(this) { lottoNums ->
             // Update the cached copy of the words in the adapter.
             lottoNums?.let {
                 mAllLottoNum = it
                 isAllSecondCheck = true
                 isAllCheck(isAllFirstCheck, isAllSecondCheck)
             }
-        })
+        }
 
         getLottoFirst()
 
@@ -79,8 +75,6 @@ class IntroActivity : BaseActivity() {
 
     private fun isAllCheck(first: Boolean, second: Boolean) {
         if (first && second) {
-            isAllFirstCheck = false
-            isAllSecondCheck = false
             if (mAppVersion.isEmpty()) {
                 alertDialogStart(resources.getString(R.string.network_check))
             } else {
@@ -97,7 +91,6 @@ class IntroActivity : BaseActivity() {
 
     private fun getLottoFirst() {
         viewModel.selectGetVersion(
-            this,
             URLs.JSON_,
             URLs.ANDROID_GET_VERSION
         )
@@ -189,8 +182,7 @@ class IntroActivity : BaseActivity() {
                 builder.setTitle("알림").setMessage(lottoFirstPlacePeople.toSpanned())
                     .setNeutralButton("강제실행") { _, _ ->
                         activityStart()
-                    }
-                    .setPositiveButton("재시도") { _, _ ->
+                    }.setPositiveButton("재시도") { _, _ ->
                         getLottoFirst()
                     }.setNegativeButton("닫기") { _, _ -> finish() }
 
@@ -200,9 +192,9 @@ class IntroActivity : BaseActivity() {
                     (dialogInterface as AlertDialog).getButton(AlertDialog.BUTTON_NEUTRAL)
                         .setTextColor(ContextCompat.getColor(this, R.color.colorAccent))
                     dialogInterface.getButton(AlertDialog.BUTTON_POSITIVE)
-                        .setTextColor(ContextCompat.getColor(this, R.color.text_color))
+                        .setTextColor(ContextCompat.getColor(this, R.color.alram_text))
                     dialogInterface.getButton(AlertDialog.BUTTON_NEGATIVE)
-                        .setTextColor(ContextCompat.getColor(this, R.color.text_color))
+                        .setTextColor(ContextCompat.getColor(this, R.color.alram_text))
                 }
                 dialog.setCanceledOnTouchOutside(false)
                 dialog.show()

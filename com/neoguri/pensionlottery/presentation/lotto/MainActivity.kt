@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.ads.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.neoguri.pensionlottery.BuildConfig
 import com.neoguri.pensionlottery.PensionLottery
 import com.neoguri.pensionlottery.R
 import com.neoguri.pensionlottery.base.BaseActivity
@@ -356,15 +357,15 @@ class MainActivity : BaseActivity(), View.OnClickListener, View.OnLongClickListe
         mBinding.appBarMainActivity.contentMainActivity.contentMainBottom.mainMyNumRecyclerView.itemAnimator =
             DefaultItemAnimator()
 
-        viewModel.mLiveRoomLottoNum.observe(this, { lottoNums ->
+        viewModel.mLiveRoomLottoNum.observe(this) { lottoNums ->
             // Update the cached copy of the words in the adapter.
             lottoNums?.let {
                 mLottoInternalData = it
                 viewModel.roomGetLottoSum(it)
             }
-        })
+        }
 
-        viewModel.mRJLottoNum.observe(this, { lottoNums ->
+        viewModel.mRJLottoNum.observe(this) { lottoNums ->
             // Update the cached copy of the words in the adapter.
             lottoNums?.let {
                 CoroutineScope(Dispatchers.Main).launch {
@@ -384,9 +385,9 @@ class MainActivity : BaseActivity(), View.OnClickListener, View.OnLongClickListe
                     progressClose()
                 }
             }
-        })
+        }
 
-        viewModel.mMyLottoNum.observe(this, { myLottoNums ->
+        viewModel.mMyLottoNum.observe(this) { myLottoNums ->
             // Update the cached copy of the words in the adapter.
             myLottoNums?.let {
                 CoroutineScope(Dispatchers.Main).launch {
@@ -395,7 +396,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, View.OnLongClickListe
                     isAllCheck(isFirst, isSecond)
                 }
             }
-        })
+        }
 
         MobileAds.initialize(this) { }
 
@@ -434,9 +435,9 @@ class MainActivity : BaseActivity(), View.OnClickListener, View.OnLongClickListe
 
     private fun loadBanner() {
         if (PensionLottery.APP_MODE == PensionLottery.APP_MODE_DEBUG) {
-            mAdView.adUnitId = resources.getString(R.string.banner_ad_unit_id_for_test)
+            mAdView.adUnitId = BuildConfig.banner_ad_unit_id_for_test
         } else {
-            mAdView.adUnitId = resources.getString(R.string.banner_ad_unit_id)
+            mAdView.adUnitId = BuildConfig.banner_ad_unit_id
         }
 
         mAdView.adSize = adSize

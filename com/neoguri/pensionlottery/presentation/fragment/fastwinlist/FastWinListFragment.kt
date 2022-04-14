@@ -190,30 +190,30 @@ class FastWinListFragment : BaseFragment(), View.OnClickListener, TextView.OnEdi
         mDynamicFirstList.clear()
         mDynamicBonusList.clear()
 
-        viewModel.winnigStoreFirst.observe(viewLifecycleOwner, { lottoNums ->
+        viewModel.winnigStoreFirst.observe(viewLifecycleOwner) { lottoNums ->
             // Update the cached copy of the words in the adapter.
             lottoNums?.let {
                 isWinnigStoreFirst = true
                 isAllCheck(isGetItem, isWinnigStoreFirst, isWinnigStoreBonus)
             }
-        })
+        }
 
-        viewModel.winnigStoreBonus.observe(viewLifecycleOwner, { lottoNums ->
+        viewModel.winnigStoreBonus.observe(viewLifecycleOwner) { lottoNums ->
             // Update the cached copy of the words in the adapter.
             lottoNums?.let {
                 isWinnigStoreBonus = true
                 isAllCheck(isGetItem, isWinnigStoreFirst, isWinnigStoreBonus)
             }
-        })
+        }
 
-        viewModel.mRJLottoNum.observe(viewLifecycleOwner, { lottoNums ->
+        viewModel.mRJLottoNum.observe(viewLifecycleOwner) { lottoNums ->
             // Update the cached copy of the words in the adapter.
             lottoNums?.let {
                 isGetItem = true
                 mList = it
                 isAllCheck(isGetItem, isWinnigStoreFirst, isWinnigStoreBonus)
             }
-        })
+        }
 
     }
 

@@ -83,7 +83,7 @@ class PensionLotteryViewModel(application: Application) : AndroidViewModel(appli
 
     fun myQRLottoNum(
         roomLottoNum: ArrayList<QrLottoNum>
-    ) {
+    ) = viewModelScope.launch(Dispatchers.IO) {
         myQRLottoNumItemList.postValue(roomLottoNum)
     }
     //QRCodeFragment
@@ -107,10 +107,9 @@ class PensionLotteryViewModel(application: Application) : AndroidViewModel(appli
     }
 
     fun selectGetVersion(
-        context: Context,
         php: String,
         url: String
-    ) {
+    ) = viewModelScope.launch(Dispatchers.IO) {
         LottoRepository.getVersionInfo(
             php,
             url,
@@ -122,11 +121,6 @@ class PensionLotteryViewModel(application: Application) : AndroidViewModel(appli
                 }
 
                 override fun onFailure(throwable: Throwable) {
-                    Toast.makeText(
-                        context,
-                        context.resources.getString(R.string.network_check),
-                        Toast.LENGTH_SHORT
-                    ).show()
                     lottoVersionJson.postValue("")
                     throwable.printStackTrace()
                 }
@@ -193,7 +187,7 @@ class PensionLotteryViewModel(application: Application) : AndroidViewModel(appli
 
     }
 
-    private fun selectGetLottoNum(jsonString: String) {
+    private fun selectGetLottoNum(jsonString: String) = viewModelScope.launch(Dispatchers.IO) {
         LottoRepository.getLottoInfo(
             URLs.JSON_,
             URLs.SELECT_PENSION_LOTTERY,
@@ -210,7 +204,7 @@ class PensionLotteryViewModel(application: Application) : AndroidViewModel(appli
                 }
 
                 override fun onFailure(throwable: Throwable) {
-                    mRJLottoNum.postValue(null)
+                    mRJLottoNum.postValue(mAllLottoNum)
                     throwable.printStackTrace()
                 }
             })
@@ -219,7 +213,7 @@ class PensionLotteryViewModel(application: Application) : AndroidViewModel(appli
     fun selectGetAdminCheck(
         php: String,
         url: String
-    ) {
+    ) = viewModelScope.launch(Dispatchers.IO) {
         LottoRepository.getAdminCheckInfo(
             php,
             url,
@@ -238,11 +232,10 @@ class PensionLotteryViewModel(application: Application) : AndroidViewModel(appli
     }
 
     fun insertAdminLotto(
-        context: Context,
         php: String,
         url: String,
         input_type: String
-    ) {
+    ) = viewModelScope.launch(Dispatchers.IO) {
         LottoRepository.insertAdminLottoInfo(
             php,
             url,
@@ -250,13 +243,6 @@ class PensionLotteryViewModel(application: Application) : AndroidViewModel(appli
             object : LottoRepository.GetDataCallback<AdminLottoEntity> {
                 override fun onSuccess(data: AdminLottoEntity?) {
                     data?.let {
-                        if (data.result == "T") {
-                            Toast.makeText(
-                                context,
-                                "해당 회차 입력 성공",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
                         selectGetAdminCheck(
                             URLs.JSON_,
                             URLs.LOTTO_MAX_CHECK
@@ -265,11 +251,6 @@ class PensionLotteryViewModel(application: Application) : AndroidViewModel(appli
                 }
 
                 override fun onFailure(throwable: Throwable) {
-                    Toast.makeText(
-                        context,
-                        context.resources.getString(R.string.network_check),
-                        Toast.LENGTH_SHORT
-                    ).show()
                     throwable.printStackTrace()
                 }
             })

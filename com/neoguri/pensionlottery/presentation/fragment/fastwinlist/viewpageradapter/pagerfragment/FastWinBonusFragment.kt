@@ -120,10 +120,8 @@ class FastWinBonusFragment : BaseFragment(), LifecycleObserver {
     fun initData(
         arrayList: ArrayList<PensionLotteryData>
     ) {
-
         mAdapter?.updateBlockNumListItems(arrayList)
         mBinding.pastFsRecyclerView.post { mBinding.pastFsRecyclerView.scrollToPosition(0) }
-
     }
 
 }

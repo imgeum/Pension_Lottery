@@ -210,7 +210,7 @@ class MyNumListFragment : BaseFragment(), View.OnClickListener, LifecycleObserve
 
         itemClick()
 
-        viewModel.mMyLottoNum.observe(viewLifecycleOwner, { myLottoNums ->
+        viewModel.mMyLottoNum.observe(viewLifecycleOwner) { myLottoNums ->
             // Update the cached copy of the words in the adapter.
             myLottoNums?.let {
 
@@ -229,7 +229,7 @@ class MyNumListFragment : BaseFragment(), View.OnClickListener, LifecycleObserve
 
                 mAdapter?.notifyItemRangeChanged(mMinNum, mList.count())
             }
-        })
+        }
 
     }
 

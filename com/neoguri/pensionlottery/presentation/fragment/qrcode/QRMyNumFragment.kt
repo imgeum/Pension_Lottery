@@ -143,16 +143,16 @@ class QRMyNumFragment : BaseFragment(), LifecycleObserver, View.OnClickListener 
 
         LottoColorUtil.initLottoColorSetting(requireActivity(), mBinding.includeToolbar.backImage)
 
-        viewModel.mRJLottoNum.observe(viewLifecycleOwner, { lottoNums ->
+        viewModel.mRJLottoNum.observe(viewLifecycleOwner) { lottoNums ->
             // Update the cached copy of the words in the adapter.
             lottoNums?.let {
                 mLottoItemList = it
                 isAllFirstCheck = true
                 isAllCheck(isAllFirstCheck, isAllSecondCheck)
             }
-        })
+        }
 
-        viewModel.myQRLottoNumItemList.observe(viewLifecycleOwner, { lottoNums ->
+        viewModel.myQRLottoNumItemList.observe(viewLifecycleOwner) { lottoNums ->
             // Update the cached copy of the words in the adapter.
             lottoNums?.let {
                 isAllSecondCheck = true
@@ -163,7 +163,7 @@ class QRMyNumFragment : BaseFragment(), LifecycleObserver, View.OnClickListener 
                 }
                 isAllCheck(isAllFirstCheck, isAllSecondCheck)
             }
-        })
+        }
 
     }
 
