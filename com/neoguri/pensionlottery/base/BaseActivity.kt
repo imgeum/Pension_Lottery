@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.LifecycleOwner
 import com.neoguri.pensionlottery.R
+import com.neoguri.pensionlottery.util.LogUtil
 import com.neoguri.pensionlottery.util.PrefUtil
 
 open class BaseActivity : AppCompatActivity(), LifecycleOwner {
@@ -30,15 +31,18 @@ open class BaseActivity : AppCompatActivity(), LifecycleOwner {
             ) and 0x00ffffff
         )
 
-        mNightMode = nightMode == "000000"
+        mNightMode = nightMode != "ffffff"
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.statusBarColor = ContextCompat.getColor(this, R.color.color_statusbar)
-            WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars =  nightMode != "FFFFFF"
-        } else if (Build.VERSION.SDK_INT >= 21) {
-            // 21 버전 이상일 때
-            window.statusBarColor = Color.BLACK
+            WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = !mNightMode
+        } else {
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            window.statusBarColor = ContextCompat.getColor(this, R.color.color_statusbar)
         }
+
+        window.navigationBarColor = ContextCompat.getColor(this, R.color.color_statusbar)
+        WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightNavigationBars = !mNightMode
 
     }
 

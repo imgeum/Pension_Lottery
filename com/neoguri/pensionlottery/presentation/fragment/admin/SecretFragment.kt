@@ -154,11 +154,6 @@ class SecretFragment : BaseFragment(), LifecycleObserver, View.OnClickListener {
                                 }
                             }
                         }
-                        Toast.makeText(
-                            context,
-                            "해당 회차 입력 성공",
-                            Toast.LENGTH_SHORT
-                        ).show()
                     }
                     mBinding.uploadButton.setOnClickListener(this)
                 } else {
